@@ -32,13 +32,13 @@ var app = {
         var parentElement = document.getElementById('deviceready');
         var listeningElement = parentElement.querySelector('.listening');
         listeningElement.setAttribute('style', 'display:none;');
-        window.plugins.insomnia.keepAwake()
+        window.plugins.insomnia.keepAwake();
 
         callBack = this.processEvent;
         cordova.plugins.CordovaMqTTPlugin.connect({
-            url:"tcp://cloud11.dbis.rwth-aachen.de", //a public broker used for testing purposes only. Try using a self hosted broker for production.
-            port:1883,
-            clientId:"2fb0b94a-6521-4a4c-8d36-4e70600bb56c",
+            url: config.mqttServer, //a public broker used for testing purposes only. Try using a self hosted broker for production.
+            port: config.port,
+            clientId: config.clientId,
             connectionTimeout:3000,
             keepAlive:60,
             success:function(s){
@@ -63,7 +63,7 @@ var app = {
         document.getElementById('deviceready').querySelector('.received').setAttribute('style', 'display:block;');
         // process the event object
         cordova.plugins.CordovaMqTTPlugin.publish({
-            topic:"/i5/mobileMotion/accelerometer",
+            topic: config.accelerometerTopic,
             payload: event.acceleration.x + "," + event.acceleration.y + "," + event.acceleration.z,
             qos:0,
             retain:false,
@@ -75,7 +75,7 @@ var app = {
             }
         })
         cordova.plugins.CordovaMqTTPlugin.publish({
-            topic:"/i5/mobileMotion/gyroscope",
+            topic: config.gyroscopeTopic,
             payload:event.rotationRate.alpha + "," + event.rotationRate.beta + "," + event.rotationRate.gamma,
             qos:0,
             retain:false,
